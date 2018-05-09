@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/shixq/workspaces/android-projects/AutoKeyDemo/opencv-sdk/src/main/assets"/><source path="/home/shixq/workspaces/android-projects/AutoKeyDemo/opencv-sdk/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/home/shixq/workspaces/android-projects/AutoKeyDemo/opencv-sdk/src/debug/assets"/></dataSet></merger>
