@@ -12,6 +12,7 @@ import java.util.concurrent.Executors
 class DakaManager {
     companion object {
         val TAG = "DakaManager"
+        var status = false
         private val fixedThreadPool = Executors.newFixedThreadPool(3)
         fun startDaka() {
             fixedThreadPool.run {

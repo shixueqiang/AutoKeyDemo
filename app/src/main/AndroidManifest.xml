@@ -3,6 +3,8 @@
     package="com.shixq.autokeydemo">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +21,11 @@
             </intent-filter>
         </activity>
         <service android:name=".FloatBallService" android:exported="true" />
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.shixq.autokey.alarm.action" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -1,6 +1,9 @@
 package com.shixq.autokeydemo
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Build
@@ -114,10 +117,19 @@ class ViewManager private constructor(private val context: Context) {
         val clickListener = object : View.OnClickListener {
 
             override fun onClick(v: View) {
-                Log.d(TAG, "开始打卡...")
-                Log.d(TAG, "启动和飞信首页")
-                AppUtils.startThirdActivity(context, "com.chinasofti.rcs", "com.chinasofti.rcs.action.RcsMessageActivity")
-                DakaManager.startDaka()
+                if (DakaManager.status) {
+                    //取消打卡
+                    DakaManager.status = false
+                    val mAlarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val mIntent = Intent(AlarmReceiver.ALARM_ACTION)
+                    val mPendingIntent = PendingIntent.getBroadcast(context, 0, mIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+                    mAlarmManager.cancel(mPendingIntent)
+                } else {
+                    Log.d(TAG, "开始打卡...")
+                    DakaManager.status = true
+                    AppUtils.startThirdActivity(context, "com.chinasofti.rcs", "com.chinasofti.rcs.action.RcsMessageActivity")
+                    DakaManager.startDaka()
+                }
             }
         }
         floatBall!!.setOnTouchListener(touchListener)
@@ -134,7 +146,7 @@ class ViewManager private constructor(private val context: Context) {
             val mPoint = Point()
             windowManager!!.defaultDisplay.getSize(mPoint)
             floatBallParams!!.x = mPoint.x - floatBall!!.mWidth
-            floatBallParams!!.y = mPoint.y  shr 1
+            floatBallParams!!.y = mPoint.y shr 1
             if (Build.VERSION.SDK_INT >= 26) {
                 floatBallParams!!.type = 2038     // WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             } else {

@@ -1,7 +1,11 @@
 package com.shixq.autokeydemo
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 
@@ -21,6 +25,18 @@ class FloatBallService : Service() {
         Log.d(TAG, "onStartCommand")
         val manager = ViewManager.getInstance(this)
         manager.showFloatBall()
+        startAlarm()
         return START_STICKY
+    }
+
+    fun startAlarm() {
+        val mAlarmManager: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val mIntent = Intent(AlarmReceiver.ALARM_ACTION)
+        val mPendingIntent = PendingIntent.getBroadcast(this, 0, mIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, 10 * 1000, mPendingIntent)
+        } else {
+            mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 10 * 1000, mPendingIntent)
+        }
     }
 }

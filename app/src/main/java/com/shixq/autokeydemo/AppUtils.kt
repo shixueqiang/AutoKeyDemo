@@ -1,10 +1,14 @@
 package com.shixq.autokeydemo
 
+import android.app.KeyguardManager
 import android.content.Context
+import android.content.Context.KEYGUARD_SERVICE
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
+import android.os.Build
+import android.os.PowerManager
+import android.support.annotation.RequiresApi
 
 
 /**
@@ -30,6 +34,18 @@ class AppUtils {
                 val intent = Intent(action)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
+        fun wakeUpAndUnlock(context: Context) {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isInteractive) {
+                val wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "bright")
+                wl.acquire(1000)
+                val keyguardManager = context.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+                val keyguardLock = keyguardManager.newKeyguardLock("unLock")
+                keyguardLock.disableKeyguard()
             }
         }
     }
